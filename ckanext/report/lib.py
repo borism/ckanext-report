@@ -1,7 +1,7 @@
 '''
 These functions are for use by other extensions for their reports.
 '''
-
+from six import string_types
 import ckan.plugins as p
 
 
@@ -38,7 +38,7 @@ def filter_by_organizations(query, organization, include_sub_organizations):
     from ckan import model
     if not organization:
         return query
-    if isinstance(organization, basestring):
+    if isinstance(organization, string_types):
         organization = model.Group.get(organization)
         assert organization
     if include_sub_organizations:

@@ -20,6 +20,7 @@ setup(
     zip_safe=False,
     install_requires=[
         # -*- Extra requirements: -*-
+        'future',
     ],
     entry_points='''
         [ckan.plugins]
