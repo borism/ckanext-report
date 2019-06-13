@@ -1,3 +1,5 @@
+from flask import Blueprint
+
 import ckan.plugins as p
 from ckanext.report.interfaces import IReport
 
@@ -6,12 +8,16 @@ import ckanext.report.logic.action.update as action_update
 import ckanext.report.logic.auth.get as auth_get
 import ckanext.report.logic.auth.update as auth_update
 
+
 class ReportPlugin(p.SingletonPlugin):
-    p.implements(p.IRoutes, inherit=True)
     p.implements(p.IConfigurer)
     p.implements(p.ITemplateHelpers)
     p.implements(p.IActions, inherit=True)
     p.implements(p.IAuthFunctions, inherit=True)
+    if p.toolkit.check_ckan_version(min_version='2.8.0'):
+        p.implements(p.IBlueprint)
+    else:
+        p.implements(p.IRoutes, inherit=True)  
 
     # IRoutes
 
@@ -25,6 +31,23 @@ class ReportPlugin(p.SingletonPlugin):
         map.connect('report-org', '/report/:report_name/:organization',
                     controller=report_ctlr, action='view')
         return map
+
+    # IBlueprints
+
+    def get_blueprint(self):
+        report_ctlr = ckanext.report.controllers.ReportController
+        blueprint = Blueprint(self.name, self.__module__)
+        blueprint.template_folder = 'templates'
+        rules = [
+            ('/report', 'reports', report_ctlr.index()),
+            ('/report/<report_name>', 'report', report_ctlr.view(report_name)),
+            ('/report/<report_name>/<organization>',
+             'report-org', report_ctlr.view(report_name, organization))
+        ]
+        for rule in rules:
+            blueprint.add_url_rule(*rule)
+
+        return blueprint
 
     # IConfigurer
 
