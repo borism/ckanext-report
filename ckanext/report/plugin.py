@@ -2,6 +2,7 @@ from flask import Blueprint
 
 import ckan.plugins as p
 from ckanext.report.interfaces import IReport
+from ckanext.report.controllers import ReportController
 
 import ckanext.report.logic.action.get as action_get
 import ckanext.report.logic.action.update as action_update
@@ -35,14 +36,14 @@ class ReportPlugin(p.SingletonPlugin):
     # IBlueprints
 
     def get_blueprint(self):
-        report_ctlr = ckanext.report.controllers.ReportController
+        report_ctrl = ReportController
         blueprint = Blueprint(self.name, self.__module__)
         blueprint.template_folder = 'templates'
         rules = [
-            ('/report', 'reports', report_ctlr.index()),
-            ('/report/<report_name>', 'report', report_ctlr.view(report_name)),
+            ('/report', 'reports', report_ctrl.index()),
+            ('/report/<report_name>', 'report', report_ctrl.view(report_name)),
             ('/report/<report_name>/<organization>',
-             'report-org', report_ctlr.view(report_name, organization))
+             'report-org', report_ctrl.view(report_name, organization))
         ]
         for rule in rules:
             blueprint.add_url_rule(*rule)
