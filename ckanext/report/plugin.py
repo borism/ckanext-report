@@ -36,7 +36,7 @@ class ReportPlugin(p.SingletonPlugin):
     # IBlueprints
 
     def get_blueprint(self):
-        report_ctrl = ReportController
+        report_ctrl = ReportController()
         blueprint = Blueprint(self.name, self.__module__)
         blueprint.template_folder = 'templates'
         rules = [
