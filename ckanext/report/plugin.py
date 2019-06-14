@@ -1,4 +1,4 @@
-from flask import Blueprint
+import flask
 
 import ckan.plugins as p
 from ckanext.report.interfaces import IReport
@@ -36,8 +36,9 @@ class ReportPlugin(p.SingletonPlugin):
     # IBlueprints
 
     def get_blueprint(self):
+        session = flask.session
         report_ctrl = ReportController()
-        blueprint = Blueprint(self.name, self.__module__)
+        blueprint = flask.Blueprint(self.name, self.__module__)
         blueprint.template_folder = 'templates'
         rules = [
             ('/report', 'reports', report_ctrl.index()),
