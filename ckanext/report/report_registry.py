@@ -4,11 +4,15 @@ import re
 
 from six import string_types
 
+from paste.registry import Registry
 from paste.deploy.converters import asbool
 
 from ckan import model
 from ckan.common import OrderedDict
+from ckan.lib.cli import MockTranslator
 from ckanext.report.interfaces import IReport
+
+from pylons import translator
 
 log = logging.getLogger(__name__)
 
@@ -187,6 +191,10 @@ class ReportRegistry(object):
     def __init__(self):
         # register all the reports
         import ckan.plugins as p
+        # paste registry
+        registry = Registry()
+        registry.prepare()
+        registry.register(translator, MockTranslator())
         self._reports = {}  # this reset is needed for 'paster serve --restart'
         for plugin in p.PluginImplementations(IReport):
             report_info_dicts = plugin.register_reports()
