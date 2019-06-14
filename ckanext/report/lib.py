@@ -52,7 +52,10 @@ def filter_by_organizations(query, organization, include_sub_organizations):
 def dataset_notes(pkg):
     '''Returns a string with notes about the given package. It is
     configurable.'''
-    from pylons import config
+    try:
+        from ckan.common import config
+    except ImportError:
+        from pylons import config
     expression = config.get('ckanext-report.notes.dataset')
     if not expression:
         return ''
