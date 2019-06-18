@@ -27,7 +27,7 @@ def report_view(report_name=None, organization=None):
             reports = t.get_action('report_list')({}, {})
         except t.NotAuthorized:
             t.abort(401)
-        return flask.render_template('report/index.html', extra_vars={'reports': reports})
+        return t.render('report/index.html', extra_vars={'reports': reports})
     else:
         try:
             report = t.get_action('report_show')({}, {'id': report_name})
@@ -113,7 +113,7 @@ def report_view(report_name=None, organization=None):
     # A couple of context variables for legacy genshi reports
     c.data = data
     c.options = options
-    return flask.render_template('report/view.html', extra_vars={
+    return t.render('report/view.html', extra_vars={
         'report': report, 'report_name': report_name, 'data': data,
         'report_date': report_date, 'options': options,
         'options_html': options_html,
