@@ -147,7 +147,6 @@ class ReportPlugin(p.SingletonPlugin):
     # IBlueprints
 
     def get_blueprint(self):
-        report_ctrl = ReportController()
         blueprint = flask.Blueprint(self.name, self.__module__)
         blueprint.template_folder = 'templates'
         rules = [
