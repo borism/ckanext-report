@@ -19,8 +19,11 @@ log = __import__('logging').getLogger(__name__)
 t = p.toolkit
 c = t.c
 
+
 # flask report view
 def report_view(report_name=None, organization=None):
+    report = None
+    reports = []
     refresh = False
     if not report_name:
         try:
@@ -150,10 +153,10 @@ class ReportPlugin(p.SingletonPlugin):
         blueprint = flask.Blueprint(self.name, self.__module__)
         blueprint.template_folder = 'templates'
         rules = [
-            ('/report', 'reports', report_view()),
-            ('/report/<report_name>', 'report', report_view(report_name)),
+            ('/report', 'reports', report_view),
+            ('/report/<report_name>', 'report', report_view),
             ('/report/<report_name>/<organization>',
-             'report-org', report_view(report_name, organization))
+             'report-org', report_view)
         ]
         for rule in rules:
             blueprint.add_url_rule(*rule)
